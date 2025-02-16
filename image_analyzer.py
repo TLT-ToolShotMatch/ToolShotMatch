@@ -91,7 +91,8 @@ class ImageAnalyzer:
         non_white_mask = cv2.bitwise_not(non_white_mask)
         
         if cv2.countNonZero(non_white_mask) == 0:
-            raise ValueError("No dominant color found - image appears to be all white")
+            # raise ValueError("No dominant color found - image appears to be all white")
+            return 0, "Không khớp"
             
         # Tính trung bình màu của các pixel không phải màu trắng
         dominant_color = cv2.mean(image, mask=non_white_mask)[:3]
@@ -199,10 +200,11 @@ class ImageAnalyzer:
             raise FileNotFoundError(f"Image file not found: {image_path}")
             
         if path.suffix.lower() not in supported_formats:
-            raise ValueError(
-                f"Unsupported image format: {path.suffix}. "
-                f"Supported formats are: {supported_formats}"
-            )
+            # raise ValueError(
+            #     f"Unsupported image format: {path.suffix}. "
+            #     f"Supported formats are: {supported_formats}"
+            # )
+            return 0, "Không khớp"
             
         return True
         
@@ -223,7 +225,8 @@ class ImageAnalyzer:
         
         image = cv2.imread(str(image_path))
         if image is None:
-            raise ValueError(f"Failed to load image: {image_path}")
+            # raise ValueError(f"Failed to load image: {image_path}")
+            return 0, "Không khớp"
             
         return image
     
@@ -255,9 +258,11 @@ class ImageAnalyzer:
             
             # Input validation
             if margin_size < 0:
-                raise ValueError("Margin size must be positive")
+                # raise ValueError("Margin size must be positive")
+                return 0, "Không khớp"
             if margin_size * 2 >= min(image.shape[0], image.shape[1]):
-                raise ValueError("Margin size too large for image dimensions")
+                return 0, "Không khớp"
+                # raise ValueError("Margin size too large for image dimensions")
                 
             # Calculate new dimensions
             height, width = image.shape[:2]
@@ -330,7 +335,8 @@ class ImageAnalyzer:
             elif dominant_input_color_name == dominant_ref2_color_name:
                 reference_image = self.image_ref2
             else:
-                raise ValueError("Input image color does not match any reference image color")
+                return 0, "Không khớp"
+                # raise ValueError("Input image color does not match any reference image color")
 
 
             future_similarity = executor.submit(
